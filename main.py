@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from motor import motor_asynciode
+from motor import motor_asyncio
 import os, sys, asyncio, random
 from dotenv import load_dotenv
 from keep_alive import keep_alive
