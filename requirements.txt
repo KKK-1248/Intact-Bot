@@ -13,3 +13,4 @@ Pillow==8.3.2
 googletrans==3.1.0a0
 motor==2.5.1
 dnspython==2.1.0
+animec==0.3.3
