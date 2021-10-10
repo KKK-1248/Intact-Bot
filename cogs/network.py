@@ -35,6 +35,7 @@ class Search_web(commands.Cog):
         animem = discord.Embed(color=discord.Color.teal())
         
         res = ani(search)
+        name = res.title_english
         poster = res.poster
         
         desc = res.description
@@ -66,7 +67,7 @@ class Search_web(commands.Cog):
         animem.add_field(name=":pencil:Searched for:", 
         value=search.capitalize(), inline=False)
         animem.add_field(name=":bookmark_tabs:Found:", 
-        value=res.title_english)
+        value=name)
         animem.add_field(name=":japan:Japanese Name:", 
         value=res.title_jp)
         animem.add_field(name=":book:Description", value=desc, inline=False)
@@ -77,6 +78,15 @@ class Search_web(commands.Cog):
         ep = res.episodes
         if ep is not None:
             animem.add_field(name="Number of Episodes", value=ep)
+
+        if " " in name:
+            name = name.replace(" ", "-")
+        if ":" in name:
+            name = name.replace(":", "")
+        
+        link = f"https://kissanime.com.ru/Anime/{name}"
+
+        animem.add_field(name="Watch Free Here(*enable a adblocker to prevent redirects and pop-ups*):", value=link)
 
         animem.set_footer(text=f"Requested by @{ctx.author.name}#{ctx.author.discriminator}")
         await ctx.send(embed=animem)
