@@ -79,6 +79,12 @@ class Search_web(commands.Cog):
         if ep is not None:
             animem.add_field(name="Number of Episodes", value=ep)
 
+        sug = str(res.recommend())
+        sug = sug.replace("[", "")
+        sug = sug.replace("]", "")
+        sug = sug.replace("'", "")
+        animem.add_field(name="Suggestions to Watch", value=sug, inline=False)
+
         if " " in name:
             name = name.replace(" ", "-")
         if ":" in name:
@@ -86,7 +92,7 @@ class Search_web(commands.Cog):
         
         link = f"https://kissanime.com.ru/Anime/{name}"
 
-        animem.add_field(name="Watch Free Here(*enable a adblocker to prevent redirects and pop-ups*):", value=link)
+        animem.add_field(name="Watch Free Here(*enable a adblocker to prevent redirects and pop-ups*):", value=link, inline=False)
 
         animem.set_footer(text=f"Requested by @{ctx.author.name}#{ctx.author.discriminator}")
         await ctx.send(embed=animem)
