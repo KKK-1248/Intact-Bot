@@ -27,6 +27,6 @@ r_user_agent = "<your reddit user agent>"
 ### Run The Bot
 Navigate to the project directory and use this to run the bot:
 ```
-py bot.py
+python3 bot.py
 ```
 or just run the `bot.py` file
