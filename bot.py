@@ -41,6 +41,8 @@ async def on_ready():
     print("_______________")
     print(f"discord.py Version: v{discord.__version__}")
     print("_______________")
+    log = bot.get_channel(898470803195195392)
+    await log.send("<@869162661382868992> Bot Startup Initiated")
 
 #CHANGE THE STATUS
 async def ch_pr():

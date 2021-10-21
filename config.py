@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from motor import motor_asyncio
 import os
 from dotenv import load_dotenv
@@ -20,6 +20,15 @@ class Settings(commands.Cog):
             raise commands.NoPrivateMessage("You cant use this command in DMs")
         else:
             return True
+    
+    @tasks.loop(minutes=10)
+    async def log_data_1(self):
+        log = self.bot.fetch_channel(898470803195195392)
+        await log.send("Bot is online as of now")
+    
+    @log_data_1.before_loop
+    async def before(self):
+        await self.bot.wait_until_ready()
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -65,3 +74,4 @@ class Settings(commands.Cog):
 
 def setup(bot):
     bot.add_cog(Settings(bot))
+    Settings.log_data_1.start()
