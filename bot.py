@@ -64,7 +64,7 @@ async def ch_pr():
 async def monitor_chaos():
     await bot.wait_until_ready()
     while not bot.is_closed():
-        log = bot.fetch_channel(898470803195195392)
+        log = await bot.fetch_channel(898470803195195392)
         await log.send("Bot is online as of now")
         await asyncio.sleep(600)
 
@@ -150,11 +150,8 @@ for file in os.listdir("./music_cogs/"):
         bot.load_extension(f"music_cogs.{file[:-3]}")
 
 #LOOPS
-tasks = [
-    ch_pr(),
-    monitor_chaos()
-]
-bot.loop.create_task(tasks)
+bot.loop.create_task(ch_pr())
+bot.loop.create_task(monitor_chaos())
 #RUN
 keep_alive()
 bot.run(TOKEN)
