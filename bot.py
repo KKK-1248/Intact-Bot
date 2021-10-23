@@ -150,7 +150,11 @@ for file in os.listdir("./music_cogs/"):
         bot.load_extension(f"music_cogs.{file[:-3]}")
 
 #LOOPS
-bot.loop.create_task(ch_pr())
+tasks = [
+    ch_pr(),
+    monitor_chaos()
+]
+bot.loop.create_task(tasks)
 #RUN
 keep_alive()
 bot.run(TOKEN)
