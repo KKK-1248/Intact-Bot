@@ -61,6 +61,13 @@ async def ch_pr():
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name= f".help"))
         await asyncio.sleep(15)
 
+async def monitor_chaos():
+    await bot.wait_until_ready()
+    while not bot.is_closed():
+        log = bot.fetch_channel(898470803195195392)
+        await log.send("Bot is online as of now")
+        await asyncio.sleep(600)
+
 #ERROR HANDLER
 @bot.event
 async def on_command_error(ctx, error):
