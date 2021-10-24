@@ -4,3 +4,4 @@ __pycache__
 .replit
 pyproject.toml
 poetry.lock
+discord.log
