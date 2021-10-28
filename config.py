@@ -25,6 +25,15 @@ class Settings(commands.Cog):
     async def on_ready(self):
         print("SETTINGS ARE LOADED")
     
+    @commands.Cog.listener("on_message")
+    async def life(self, message):
+        if message.author.id != self.bot.user.id:
+            return
+
+        msg = "Bot is online as of now"
+        if message.content == msg:
+            print("BOT IS ALIVE")
+
     #DEFAULT SETTINGS MANAGEMENT
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
