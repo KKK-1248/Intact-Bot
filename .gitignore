@@ -6,4 +6,4 @@ pyproject.toml
 poetry.lock
 
 discord.log
-json/RANKING_SYS.json
+RANKING_SYS.json
