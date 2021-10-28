@@ -4,4 +4,6 @@ __pycache__
 .replit
 pyproject.toml
 poetry.lock
+
 discord.log
+json/RANKING_SYS.json
