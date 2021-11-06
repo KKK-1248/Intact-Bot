@@ -32,7 +32,7 @@ class Settings(commands.Cog):
 
         msg = "Bot is online as of now"
         if message.content == msg:
-            print("BOT IS ALIVE")
+            await message.channel.send("BOT IS ALIVE")
 
     #DEFAULT SETTINGS MANAGEMENT
     @commands.Cog.listener()
