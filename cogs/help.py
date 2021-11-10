@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-class Help(commands.Cog):
+class Help(commands.Cog, name="help_hide"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -75,5 +75,6 @@ class Help(commands.Cog):
         ownem.add_field(name="`load`", value="Loads new cogs")
         await ctx.send(embed=ownem)
 
+    
 def setup(bot):
     bot.add_cog(Help(bot))

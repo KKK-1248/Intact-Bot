@@ -1,36 +1,40 @@
-import discord
 from discord.ext import commands
 import json
 
-class NotInWhiteList(commands.CheckFailure):
+class NotInWhiteListError(commands.CheckFailure):
     pass
 
-def in_blacklist(blacklisted_members):
+def inBlacklist(blacklisted_members):
     async def inner_check(ctx):
         if ctx.author.id not in blacklisted_members:
-            raise NotInWhiteList("You're blacklisted from using the bot!")
+            raise NotInWhiteListError("You're blacklisted from using the bot!")
         
         return True
     return commands.check(inner_check)
 
-class Checks(commands.Cogs):
+class Checks(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.Cog.listener("on_message")
-    async def blacklist(self, message):
+    @commands.Cog.listener()
+    async def on_ready(self):
         with open("json/IDs.json", "r") as file:
             checkData = json.load(file)
         bannedIDs = checkData['blacklist']
 
-        ctx = await self.bot.get_context(message)
-        if ctx.valid:
-            if message.author.id in bannedIDs:
-                await message.channel.send("You have been banned from using the bot")
-            else:
-                await self.bot.process_commands(message)
-        else:
-            pass
+        commands = self.bot.walk_commands()
+        for cmd in commands:
+            try:
+                @cmd.before_invoke
+                async def ban_ids(self, ctx):
+                    if ctx.author.id in bannedIDs:
+                        raise NotInWhiteListError("You have been banned from using the bot")
+            
+            except TypeError:
+                @cmd.before_invoke
+                async def ban_ids(ctx):
+                    if ctx.author.id in bannedIDs:
+                        raise NotInWhiteListError("You have been banned from using the bot")
 
 def setup(bot):
     bot.add_cog(Checks(bot))
