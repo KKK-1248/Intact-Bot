@@ -83,12 +83,15 @@ async def on_command_error(ctx, error):
     else:
         await ctx.send('{}'.format(str(error)))
 
+class BotManagement(commands.Cog):
+    pass
+
 #RELOAD COMMANDS
 @bot.command()
 @commands.is_owner()
 async def reload(ctx):
-    # bot.unload_extension("checks")
-    # bot.load_extension("checks")
+    bot.unload_extension("checks")
+    bot.load_extension("checks")
     for file in os.listdir("./cogs/"):
         if file.endswith(".py") and not file.startswith("_"):
             try:
@@ -135,7 +138,7 @@ async def restart(ctx):
 
 #LOAD THE COGS ON STARTUP
 bot.load_extension('config')
-# bot.load_extension('checks')
+bot.load_extension('checks')
 for file in os.listdir("./intact_cogs/"):
     if file.endswith(".py") and not file.startswith("_"):
         bot.load_extension(f"intact_cogs.{file[:-3]}")

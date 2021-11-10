@@ -1,5 +1,4 @@
 from discord.ext import commands
-import json
 
 class NotInWhiteListError(commands.CheckFailure):
     pass
@@ -18,21 +17,16 @@ class Checks(commands.Cog):
     
     @commands.Cog.listener()
     async def on_ready(self):
-        with open("json/IDs.json", "r") as file:
-            checkData = json.load(file)
-        bannedIDs = checkData['blacklist']
+        bannedIDs = [
+            324
+        ]
 
         commands = self.bot.walk_commands()
         for cmd in commands:
-            try:
+            except_cmds = ["reload", "mureload", "restart"]
+            if cmd.name not in except_cmds:
                 @cmd.before_invoke
                 async def ban_ids(self, ctx):
-                    if ctx.author.id in bannedIDs:
-                        raise NotInWhiteListError("You have been banned from using the bot")
-            
-            except TypeError:
-                @cmd.before_invoke
-                async def ban_ids(ctx):
                     if ctx.author.id in bannedIDs:
                         raise NotInWhiteListError("You have been banned from using the bot")
 

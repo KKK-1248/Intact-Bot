@@ -100,6 +100,7 @@ class PlayerCog(commands.Cog):
                 #PLAY THE LINK FOUND ABOVE
                 channel = ctx.message.author.voice.channel
                 url = song_result
+                # url = "https://youtu.be/dQw4w9WgXcQ"
                 
                 if ctx.voice_client is None: #If bot is not in a vc
                     voice = await channel.connect()
