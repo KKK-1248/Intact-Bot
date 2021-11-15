@@ -94,6 +94,8 @@ class Ranking(commands.Cog):
             db[str(guild.id)][str(user.id)]['level'] = lvl
             db[str(guild.id)][str(user.id)]['name'] = str(user.name)
             await message.channel.send(f"GG {message.author.mention}, you just levelled up to **level {lvl-1}**!")
+            self.save_db(db)
+            return
         
         self.save_db(db)
 
@@ -328,7 +330,7 @@ class Ranking(commands.Cog):
         draw.text((xp_offset_x, xp_offset_y), text, font=small_font, fill="#fff")
 
         # Placing User Name
-        text = member.display_name
+        text = member.name
         text_size = draw.textsize(text, font=medium_font)
         text_offset_x = bar_offset_x - 10
         text_offset_y = bar_offset_y - text_size[1] - 10

@@ -3,6 +3,7 @@ from discord.ext import commands
 from googleapiclient.discovery import build
 from googletrans import Translator, LANGUAGES
 import wikipedia
+from animec import Anime as ani
 import urllib, re
 from dotenv import load_dotenv
 from better_profanity import profanity
@@ -22,10 +23,80 @@ class Search_web(commands.Cog):
             raise commands.NoPrivateMessage("You cant use this command in DMs")
         else:
             return True
+
     @commands.Cog.listener()
     async def on_ready(self):
         print("SEARCH_WEB COG is loaded")
 
+    #Anime command
+    @commands.command(aliases=['ani'])
+    async def anime(self, ctx, *, search):
+        await ctx.send("Getting data.....")
+        animem = discord.Embed(color=discord.Color.teal())
+        
+        res = ani(search)
+        name = res.title_english
+        poster = res.poster
+        
+        desc = res.description
+        try:
+            desc = desc.replace("(Source: MyAnimeList)", "")
+            desc = desc.replace("(Source: MyAnimeList Rewrite)", "")
+            desc = desc.replace("(Source: MAL)", "")
+            desc = desc.replace("(Source: MAL Rewrite)", "")
+            desc = desc.replace("[Written by MAL]", "")
+            desc = desc.replace("[Written by MAL Rewrite]", "")
+            desc = desc.replace("[Written by MyAnimeList]", "")
+            desc = desc.replace("[Written by MyAnimeList Rewrite]", "")
+        except:
+            pass
+
+        if len(desc)>1024:
+            desc = desc[0:1020]
+            desc = f"{desc}...."
+
+        genre = str(res.genres)
+        try:
+            genre = genre.replace("[", "")
+            genre = genre.replace("]", "")
+            genre = genre.replace("'", "")
+        except:
+            pass
+
+        animem.set_thumbnail(url=poster)
+        animem.add_field(name=":pencil:Searched for:", 
+        value=search.capitalize(), inline=False)
+        animem.add_field(name=":bookmark_tabs:Found:", 
+        value=name)
+        animem.add_field(name=":japan:Japanese Name:", 
+        value=res.title_jp)
+        animem.add_field(name=":book:Description", value=desc, inline=False)
+        animem.add_field(name=":hourglass_flowing_sand:Status", value=res.status)
+        animem.add_field(name=":tv:Type", value=res.type)
+        animem.add_field(name=":arrow_right:Genre", value=genre, inline=False)
+        
+        ep = res.episodes
+        if ep is not None:
+            animem.add_field(name="Number of Episodes", value=ep)
+
+        sug = str(res.recommend())
+        sug = sug.replace("[", "")
+        sug = sug.replace("]", "")
+        sug = sug.replace("'", "")
+        animem.add_field(name="Suggestions to Watch", value=sug, inline=False)
+
+        if " " in name:
+            name = name.replace(" ", "-")
+        if ":" in name:
+            name = name.replace(":", "")
+        
+        link = f"https://kissanime.com.ru/Anime/{name}"
+
+        animem.add_field(name="Watch Free Here(*enable a adblocker to prevent redirects and pop-ups*):", value=link, inline=False)
+
+        animem.set_footer(text=f"Requested by @{ctx.author.name}#{ctx.author.discriminator}")
+        await ctx.send(embed=animem)
+    
     #Translate command
     @commands.command(aliases=['t', 'translate'])
     async def trans(self, ctx, *, translate_need=None):

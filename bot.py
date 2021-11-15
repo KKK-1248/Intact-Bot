@@ -2,10 +2,17 @@ import discord
 from discord.ext import commands
 from motor import motor_asyncio
 import os, sys, asyncio, random
+import logging
 from dotenv import load_dotenv
 from keep_alive import keep_alive
 
 load_dotenv()
+
+logger = logging.getLogger('discord')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 #GET THE PREFIX FROM MONGODB
 mongo_client_id = os.environ['mongo_client_id']
@@ -18,10 +25,8 @@ async def get_prefix(bot, message):
         return default_prefix
 
     guild = await config.find_one({'guild_id': message.guild.id})
-
     if guild is None:
         prefix = default_prefix
-
     else:
         prefix = guild['prefix']
 
@@ -41,6 +46,8 @@ async def on_ready():
     print("_______________")
     print(f"discord.py Version: v{discord.__version__}")
     print("_______________")
+    log = bot.get_channel(898470803195195392)
+    await log.send("<@869162661382868992> Bot Startup Initiated")
 
 #CHANGE THE STATUS
 async def ch_pr():
@@ -69,54 +76,48 @@ async def on_command_error(ctx, error):
     else:
         await ctx.send('{}'.format(str(error)))
 
+class BotManagement(commands.Cog):
+    pass
+
 #RELOAD COMMANDS
 @bot.command()
 @commands.is_owner()
 async def reload(ctx):
-    em=discord.Embed(title="Reloading all Cogs", color=discord.Color.orange(), timestap=ctx.message.created_at)
-    
-    try:
-        bot.unload_extension(f"config")
-        bot.load_extension(f"config")
-        em.add_field(name=f"Reloaded Config", value=f"Config has been reloaded!", inline=False)
-    except Exception as e:
-        em.add_field(name=f"Failed to reload the config", value=e, inline=False)
-
-    #Reload the cogs folder
+    bot.unload_extension("checks")
+    bot.load_extension("checks")
     for file in os.listdir("./cogs/"):
         if file.endswith(".py") and not file.startswith("_"):
             try:
                 bot.unload_extension(f"cogs.{file[:-3]}")
                 bot.load_extension(f"cogs.{file[:-3]}")
-                em.add_field(name=f"Reloaded: {file}", value=f"{file} cog has been reloaded!", inline=False)
             except Exception as e:
-                em.add_field(name=f"Failed to reload the following cog(s): {file}", value=e, inline=False)
+                await ctx.send(f"Failed to reload the following cog:- *{file}*")
+                print(e)
     
-    #Reload the intact_cogs folder
     for file in os.listdir("./intact_cogs/"):
         if file.endswith(".py") and not file.startswith("_"):
             try:
                 bot.unload_extension(f"intact_cogs.{file[:-3]}")
                 bot.load_extension(f"intact_cogs.{file[:-3]}")
-                em.add_field(name=f"Reloaded: {file}", value=f"{file} cog has been reloaded!", inline=False)
             except Exception as e:
-                em.add_field(name=f"Failed to reload the following cog(s): {file}", value=e, inline=False)
+                await ctx.send(f"Failed to reload the following cog:- *{file}*")
+                print(e)
 
-    await ctx.send(embed=em)
+    await ctx.send("Cog Reload command completed")
 
 @bot.command()
 @commands.is_owner()
 async def mureload(ctx):
-    em=discord.Embed(title="Reloading all Music Cogs", color=discord.Color.red(), timestap=ctx.message.created_at)
     for file in os.listdir("./music_cogs/"):
         if file.endswith(".py") and not file.startswith("_"):
             try:
                 bot.unload_extension(f"music_cogs.{file[:-3]}")
                 bot.load_extension(f"music_cogs.{file[:-3]}")
-                em.add_field(name=f"Reloaded: {file}", value=f"{file} cog has been reloaded!", inline=False)
             except Exception as e:
-                em.add_field(name=f"Failed to reload the following music cog(s): {file}", value=e, inline=False)
-    await ctx.send(embed=em)
+                await ctx.send(f"Failed to reload the following cog:- *{file}*")
+                print(e)
+            
+    await ctx.send("Cog Reload command completed")
 
 #RESTART THE BOT
 @bot.command()
@@ -130,6 +131,7 @@ async def restart(ctx):
 
 #LOAD THE COGS ON STARTUP
 bot.load_extension('config')
+bot.load_extension('checks')
 for file in os.listdir("./intact_cogs/"):
     if file.endswith(".py") and not file.startswith("_"):
         bot.load_extension(f"intact_cogs.{file[:-3]}")

@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from motor import motor_asyncio
 import os
 from dotenv import load_dotenv
@@ -25,6 +25,17 @@ class Settings(commands.Cog):
     async def on_ready(self):
         print("SETTINGS ARE LOADED")
     
+    @tasks.loop(minutes=10)
+    async def make_sure_stays_alive(self):
+        channel = self.bot.get_channel(898470803195195392)
+        channel.send("BOT IS ALIVE")
+
+    @commands.Cog.listener("on_message")
+    async def start_life(self, message):
+        msg = "<@869162661382868992> Bot Startup Initiated"
+        if message.content == msg:
+            self.make_sure_stays_alive.start()
+
     #DEFAULT SETTINGS MANAGEMENT
     @commands.Cog.listener()
     async def on_guild_join(self, guild):

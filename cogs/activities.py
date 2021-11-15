@@ -51,6 +51,30 @@ class Fun_Commands(commands.Cog):
         
         else:
             await ctx.send("Whoa there! I am not omni-man or superman to kill more than one person at a time")
+    
+    @commands.command()
+    async def spotify(self, ctx, member: discord.Member=None):
+        member = member or ctx.author
+        for activity in member.activities:
+            if isinstance(activity, discord.Spotify):
+                
+                embed = discord.Embed(
+                    title = f"{member.name}'s Spotify Activity",
+                    description = f"Listening to **{activity.title}**",
+                    color = discord.Colour.random()
+                )
+
+                embed.set_thumbnail(url=activity.album_cover_url)
+                embed.add_field(name="Artist", value=activity.artist, inline=False)
+                embed.add_field(name="Album", value=activity.album, inline=False)
+                minutes, seconds = divmod(int(activity.duration.seconds), 60)
+                song_duration = f'{minutes}:{seconds} minutes'
+                embed.add_field(name="Duration of the Song", value=song_duration, inline=False)
+                embed.set_footer(text="Song started at {}".format(activity.created_at.strftime("%H:%M")))
+                await ctx.send(embed=embed)
+                return
+        
+        await ctx.send("The member is not listening to spotify")
 
 def setup(bot):
     bot.add_cog(Fun_Commands(bot))

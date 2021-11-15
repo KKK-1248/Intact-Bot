@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-class Help(commands.Cog):
+class Help(commands.Cog, name="help_hide"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -49,7 +49,6 @@ class Help(commands.Cog):
     async def music(self, ctx):
         musichelp = discord.Embed(color=discord.Color.purple())
         musichelp.set_author(name="MUSIC COMMANDS HELP")
-        #musichelp.add_field(name="**STILL IN DEVELOPMENT, MOST OF THESE WONT WORK OR WILL GIVE ERRORS**", value='\u200b', inline=False)
         musichelp.add_field(name="`play`", value="Plays the requested song")
         musichelp.add_field(name="`stop`", value="Stops the currently playing song")
         musichelp.add_field(name="`pause`", value="Pauses the currently playing song")
@@ -66,7 +65,6 @@ class Help(commands.Cog):
         ownem= discord.Embed(color=discord.Color.blurple())
         ownem.set_author(name="Developer Help")
 
-        ownem.add_field(name="`brb`", value="Still in development", inline=False)
         ownem.add_field(name="`guild(s)/g`", value="Shows the servers the bot is in. Might not always work. A bit buggy/messy")
         ownem.add_field(name="`truth`", value="Roasts Cherry")
 
@@ -77,5 +75,6 @@ class Help(commands.Cog):
         ownem.add_field(name="`load`", value="Loads new cogs")
         await ctx.send(embed=ownem)
 
+    
 def setup(bot):
     bot.add_cog(Help(bot))
