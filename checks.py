@@ -18,7 +18,7 @@ class Checks(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         bannedIDs = [
-            324
+            # None yet. Just an empty list
         ]
 
         commands = self.bot.walk_commands()
