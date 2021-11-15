@@ -8,3 +8,4 @@ poetry.lock
 discord.log
 json
 checks.py
+README.md
