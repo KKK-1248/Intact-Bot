@@ -178,8 +178,12 @@ class Ranking(commands.Cog):
         index = 1
         x=10
         for amt in total:
-            id_ = leaderboard[amt]
-            member = self.bot.get_user(id_)
+            idOfUser = leaderboard[amt]
+            member = self.bot.get_user(idOfUser)
+            
+            if member not in ctx.guild.members:
+                continue
+
             lvl = base[str(member.id)]['level']
             if lvl != 1:
                 leadem.add_field(name=f"Rank #{index} - **{member}**", value=f"Total XP: **{amt}**\nLevel: **{lvl-1}**", inline=False)

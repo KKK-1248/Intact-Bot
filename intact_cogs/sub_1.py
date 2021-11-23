@@ -1,17 +1,9 @@
 import discord
 from discord.ext import commands
-import requests
-
 
 class Intact_1(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    def cog_check(self, ctx):
-        if isinstance(ctx.channel, discord.channel.DMChannel):
-            raise commands.NoPrivateMessage("You cant use this command in DMs")
-        else:
-            return True
 
     @commands.command()
     async def truth(self, ctx):

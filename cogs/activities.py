@@ -1,6 +1,9 @@
 import discord
-import random
 from discord.ext import commands
+from PIL import Image
+from io import BytesIO
+import asyncio
+import random
 
 class Fun_Commands(commands.Cog):
     def __init__(self, bot):
@@ -36,21 +39,19 @@ class Fun_Commands(commands.Cog):
 
     @commands.command()
     async def kill(self, ctx, member:discord.Member=None):
-        if member==None:
-            await ctx.send("Please mention the persion you want to kill")
-
-        elif len(ctx.message.mentions) == 1:
-            kill_list = self.killer(author=ctx.author.mention, mention=member.mention)
-
-            if self.bot.user in ctx.message.mentions:
-                await ctx.send("I dont wanna commit suicide")
-            elif ctx.message.author in ctx.message.mentions:
-                await ctx.send("OK, you are dead. Now ping someone else to kill")
-            else:
-                await ctx.send(random.choice(kill_list))
+        if member == None or member == ctx.author:
+            await ctx.send("OK, you are dead. Now ping someone else to kill")
+            return
         
+        kill_list = self.killer(
+            author=ctx.author.mention,
+            mention=member.mention
+        )
+
+        if member == self.bot.user:
+            await ctx.send("I dont wanna commit suicide")
         else:
-            await ctx.send("Whoa there! I am not omni-man or superman to kill more than one person at a time")
+            await ctx.send(random.choice(kill_list))
     
     @commands.command()
     async def spotify(self, ctx, member: discord.Member=None):
@@ -75,6 +76,51 @@ class Fun_Commands(commands.Cog):
                 return
         
         await ctx.send("The member is not listening to spotify")
+    
+    @commands.command(aliases=["heck"])
+    async def hack(self, ctx, user: discord.Member = None, *, virus: str = "trojan"):
+        if user is None:
+            await ctx.send("You need to mention someone to hack them you dummy!")
+            return
+
+        msg = f"``[▓                    ] / {virus}-virus.exe Packing files.``"
+        heck = await ctx.send(msg)
+        list = [
+            f"``[▓▓▓                    ] / {virus}-virus.exe Packing files.``",
+            f"``[▓▓▓▓▓▓▓                ] - {virus}-virus.exe Packing files..``",
+            f"``[▓▓▓▓▓▓▓▓▓▓▓▓           ] \ {virus}-virus.exe Packing files..``",
+            f"``[▓▓▓▓▓▓▓▓▓▓▓▓▓▓         ] | {virus}-virus.exe Packing files..``",
+            f"``[▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓      ] / {virus}-virus.exe Packing files..``",
+            f"``[▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓   ] - {virus}-virus.exe Packing files..``",
+            f"``[▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ ] \ {virus}-virus.exe Packing files..``",
+            f"``Successfully downloaded {virus}-virus.exe``",
+            "``Injecting virus.   |``",
+            "``Injecting virus..  /``",
+            "``Injecting virus... -``",
+            f"``Successfully Injected {virus}-virus.exe into {user.name}``\n\nThe totally real and dangerous hack is complete *winks*",
+            ]
+        for i in list:
+            await asyncio.sleep(1)
+            await heck.edit(content=i)
+
+    @commands.command()
+    async def wanted(self, ctx, user: discord.Member=None):
+        if user==None:
+            user=ctx.author
+        
+        wanted = Image.open("media/wanted.jpg")
+        asset = user.avatar_url_as(size = 128)
+        data = BytesIO(await asset.read())
+        pfp = Image.open(data)
+        pfp = pfp.resize((177, 177))
+
+        wanted.paste(pfp, ((120, 212)))
+        with BytesIO() as image_binary:
+            wanted.save(image_binary, "PNG")
+            image_binary.seek(0)
+            img = discord.File(fp=image_binary, filename='wanted.png')
+
+        await ctx.send(file=img)
 
 def setup(bot):
     bot.add_cog(Fun_Commands(bot))

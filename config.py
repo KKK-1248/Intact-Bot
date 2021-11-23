@@ -28,13 +28,13 @@ class Settings(commands.Cog):
     @tasks.loop(minutes=10)
     async def make_sure_stays_alive(self):
         channel = self.bot.get_channel(898470803195195392)
-        channel.send("BOT IS ALIVE")
+        await channel.send("BOT IS ALIVE")
 
     @commands.Cog.listener("on_message")
     async def start_life(self, message):
         msg = "<@869162661382868992> Bot Startup Initiated"
         if message.content == msg:
-            self.make_sure_stays_alive.start()
+            await self.make_sure_stays_alive.start()
 
     #DEFAULT SETTINGS MANAGEMENT
     @commands.Cog.listener()
@@ -64,7 +64,7 @@ class Settings(commands.Cog):
 
     #SET NEW PREFIXES
     @commands.command()
-    @commands.has_permissions(administrator=True)
+    @commands.has_permissions(manage_guild=True)
     async def setprefix(self, ctx, prefix=None):
         if prefix is None:
             await ctx.send('Please enter the new prefix along with the command!')
