@@ -1,5 +1,5 @@
+import discord
 from discord.ext import commands
-from replit import db
 
 ids = [
     "877865875607285760",
@@ -19,20 +19,37 @@ class Owner(commands.Cog):
             return
 
         guilds = self.bot.guilds
+        msg = "```"
         for a in guilds:
-            await ctx.send(f"```{a.id} - {a}```")
-  
-    @commands.command()
+            msg+= str(f"\n{a.id} - {a}\n")
+        msg += "```"
+        await ctx.send(msg)
+    
+    @commands.command(aliases=["guildcount"])
     @commands.is_owner()
-    async def keys(self, ctx):
-        keys = db.keys()
-        await ctx.send(keys)
+    async def guild_count(self, ctx):
+        if str(ctx.guild.id) not in ids:
+            return
+
+        guilds = len(self.bot.guilds)
+        await ctx.send(f"The Bot is currently is on **{guilds} servers**")
     
     @commands.command()
     @commands.is_owner()
-    async def delete_all_keys(self, ctx):
-        db.clear()
-        await ctx.reply("ALL REPLIT KEYS ARE DELETED")
+    async def leave_guild(self, ctx, id:discord.Guild):
+        guild = self.bot.get_guild(id)
+        guild.leave()
+    
+    @commands.command()
+    async def truth(self, ctx):
+        if ctx.message.author.id == 760482926663172138:#chetan id
+            await ctx.send("You Suck!!!")
+        else:
+            await ctx.send("You dont suck")
+    
+    @commands.command()
+    async def uptime(self, ctx):
+        pass
 
 def setup(bot):
     bot.add_cog(Owner(bot))

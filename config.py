@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands, tasks
+from discord.ext import commands
 from motor import motor_asyncio
 import os
 from dotenv import load_dotenv
@@ -24,17 +24,6 @@ class Settings(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("SETTINGS ARE LOADED")
-    
-    @tasks.loop(minutes=10)
-    async def make_sure_stays_alive(self):
-        channel = self.bot.get_channel(898470803195195392)
-        await channel.send("BOT IS ALIVE")
-
-    @commands.Cog.listener("on_message")
-    async def start_life(self, message):
-        msg = "<@869162661382868992> Bot Startup Initiated"
-        if message.content == msg:
-            await self.make_sure_stays_alive.start()
 
     #DEFAULT SETTINGS MANAGEMENT
     @commands.Cog.listener()
@@ -53,12 +42,14 @@ class Settings(commands.Cog):
             'Ranking_System': True
         }
         await config.insert_one(new_guild)
+        cluster.close()
         await log_one.send(f"```New Guild Detected\nGuild Name: {guild.name}\nGuild ID: {guild.id}\nMember Count: {guild.member_count}```")
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
         log_one = self.bot.get_channel(896029961528438806)
         await config.delete_one({'guild_id': guild.id})
+        cluster.close()
         await log_one.send(f"```Bot left guild\nGuild Name: {guild.name}```")
 
 
@@ -72,7 +63,9 @@ class Settings(commands.Cog):
 
         guild = {'guild_id': ctx.guild.id}
         await config.update_one(guild, {"$set":{"prefix": prefix, "guild_name": str(ctx.guild.name)}})
+        cluster.close()
         await ctx.send(f'Prefix changed to: {prefix}')
 
 def setup(bot):
     bot.add_cog(Settings(bot))
+    cluster.close()

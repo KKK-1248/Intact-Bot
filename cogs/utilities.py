@@ -153,6 +153,15 @@ Edit Snipe :-
         mem_count = int(ctx.guild.member_count)-bot_count
         await ctx.send(f"There are currently **{mem_count}** humans and **{bot_count}** bots in this server")
 
+    @commands.command()
+    async def status(self, ctx, user:discord.Member=None):
+        if user is None:
+            user = ctx.author
+            member = 'Your'
+        else:
+            member = user.name
+        await ctx.send(f"{member}'s status is **{str(ctx.author.status)}**")
+
     @commands.command(pass_context=True, aliases=["clear", "delete"])
     @commands.has_permissions(manage_permissions=True)
     async def purge(self, ctx, limit: int):

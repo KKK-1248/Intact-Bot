@@ -3,7 +3,6 @@ from discord.ext import commands
 from googleapiclient.discovery import build
 from googletrans import Translator, LANGUAGES
 import wikipedia
-import urllib, re
 from dotenv import load_dotenv
 from better_profanity import profanity
 import warnings, os, random
@@ -72,20 +71,7 @@ class Search_web(commands.Cog):
     #Youtube search
     @commands.command(aliases=["youtube"])
     async def yt(self, ctx, *, search=None):
-        if search==None:
-            await ctx.send("Please enter what you want to search for")
-            return
-
-        query_string = urllib.parse.urlencode({'search_query': search})
-        htm_content = urllib.request.urlopen(
-            'http://www.youtube.com/results?' + query_string)
-        search_results = re.findall(r'/watch\?v=(.{11})', htm_content.read().decode())
-        
-        if search_results==[]:
-            await ctx.send("No video is on youtube with that name")
-            return
-
-        await ctx.send('http://www.youtube.com/watch?v=' + search_results[0])
+        await ctx.send('**Note: This command is deprecated**')
 
     #Wikipedia search
     @commands.command(aliases=["wikipedia"])

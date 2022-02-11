@@ -98,6 +98,7 @@ class Ranking(commands.Cog):
             return
         
         self.save_db(db)
+        cluster.close()
 
 
     @commands.command(aliases=["level", "lvl"])
@@ -359,3 +360,4 @@ class Ranking(commands.Cog):
 
 def setup(bot):
     bot.add_cog(Ranking(bot))
+    cluster.close()
