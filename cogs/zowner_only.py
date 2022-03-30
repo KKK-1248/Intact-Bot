@@ -42,7 +42,7 @@ class Owner(commands.Cog):
     
     @commands.command()
     async def truth(self, ctx):
-        if ctx.message.author.id == 760482926663172138:#chetan id
+        if ctx.message.author.id == 760482926663172138:#id
             await ctx.send("You Suck!!!")
         else:
             await ctx.send("You dont suck")
