@@ -20,10 +20,10 @@ class Checks(commands.Cog):
         bannedIDs = [
             # None yet. Just an empty list
         ]
+        except_cmds = ["reload", "ch_pr"]
 
         commands = self.bot.walk_commands()
         for cmd in commands:
-            except_cmds = ["reload", "mureload", "restart"]
             if cmd.name not in except_cmds:
                 @cmd.before_invoke
                 async def ban_ids(self, ctx):

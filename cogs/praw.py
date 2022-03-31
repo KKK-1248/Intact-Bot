@@ -6,14 +6,11 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-cID = os.environ['r_client_ID']
-cS = os.environ['r_client_secret']
-UA = os.environ['r_user_agent']
 reddit = asyncpraw.Reddit(
-                client_id = cID,
-                client_secret = cS,
-                user_agent = UA
-                )
+    client_id = os.environ['r_client_ID'],
+    client_secret = os.environ['r_client_secret'],
+    user_agent =  os.environ['r_user_agent']
+)
 
 class Praw_Real(commands.Cog):
     def __init__(self, bot):
@@ -34,7 +31,6 @@ class Praw_Real(commands.Cog):
     async def get_submissions(self):
         global all_subs
         all_subs = []
-        #all_subs.clear()
 
         subreddit = await reddit.subreddit("memes")
         top = subreddit.hot(limit=200)
@@ -66,17 +62,9 @@ class Praw_Real(commands.Cog):
 
     @commands.command(aliases=["apraw", "praw"])
     @commands.is_owner()
-    async def asyncpraw(self, ctx, subs = None):
+    async def asyncpraw(self, ctx):
         global all_subs
         await ctx.send(f"There are currently **{len(all_subs)}** submissions in `global all_subs`")
-        a=0
-        if subs == "subs":
-            while a<100:
-                try:
-                    await ctx.send(f"{all_subs[a]},  {all_subs[a+1]},  {all_subs[a+2]},  {all_subs[a+3]},  {all_subs[a+4]}")
-                    a = a + 1
-                except:
-                    pass
 
 def setup(bot):
     bot.add_cog(Praw_Real(bot))

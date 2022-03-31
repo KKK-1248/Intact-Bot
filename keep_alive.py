@@ -1,13 +1,11 @@
 from flask import Flask
 from threading import Thread
-import discord
 
 app = Flask('')
 
 @app.route('/')
 def home():
-    msg = f"Bot is Active... discord.py Version: v{discord.__version__}"
-    return msg
+    return str(f"Inatact Bot is Active")
 
 def run():
   app.run(host='0.0.0.0',port=8080)
